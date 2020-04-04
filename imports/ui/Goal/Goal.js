@@ -6,15 +6,17 @@ import styled from 'styled-components'
 import DeleteIcon from '@material-ui/icons/Delete'
 import EditIcon from '@material-ui/icons/Edit'
 import DoneIcon from '@material-ui/icons/Done'
+import ModalWrapper from '../Modal'
 
 const Input = styled.textarea`
     height: auto;
-    font-size: 12px;
+    font-size: 14px;
     color: #93876b;
     background: transparent;
     width: 68%;
     textDecoration: ${props => props.completed ? "line-through" : "none" };
     border: ${props => !props.isEditing ? "1px solid #93876b" : "1px solid #fff" };
+    margin-top: -3px;
 `
 
 const StyledButton = styled.button`
@@ -61,6 +63,7 @@ function Goal(props) {
     const { goal, removeGoal, toggleGoal, updateGoal } = props
     const [isEditing, setIsEditing] = useState(true)
     const [editedName, setEditedName] = useState()
+    const [openModal, setOpenModal] = useState(false)
 
     const handleToggleGoal = () => {
         toggleGoal({
@@ -106,25 +109,28 @@ function Goal(props) {
 
 
     return (
-        <WrapperGoal>
-            <input type="checkbox" onChange={handleToggleGoal} checked={goal.completed} />
-                <Input 
-                    // id={goal._id}
-                    type="text" 
-                    rows="2"
-                    cols="20"
-                    defaultValue={goal.name} 
-                    disabled={isEditing}
-                    onChange={e => handleOnChange(e)}
-                    completed={goal.completed}
-                    isEditing={isEditing}
-                />
-            {isEditing ? 
-                <StyledButton onClick={() => handleStartEnditting(goal.name)}><EditIcon fontSize="small" style={{ color: '#93876b' }} /></StyledButton> : 
-                <StyledButton onClick={() => handleEdit(goal._id)}><DoneIcon fontSize="small" style={{ color: '#93876b' }} /></StyledButton>
-            }
-            <StyledButton onClick={() => handleRemove(goal._id)}><DeleteIcon fontSize="small" style={{ color: '#93876b' }} /></StyledButton>
-        </WrapperGoal>
+        <>
+            <WrapperGoal>
+                <input style={{fontSize: "14px"}} type="checkbox" onChange={handleToggleGoal} checked={goal.completed} />
+                    <Input 
+                        // id={goal._id}
+                        type="text" 
+                        rows="2"
+                        cols="20"
+                        defaultValue={goal.name} 
+                        disabled={isEditing}
+                        onChange={e => handleOnChange(e)}
+                        completed={goal.completed}
+                        isEditing={isEditing}
+                    />
+                {isEditing ? 
+                    <StyledButton onClick={() => handleStartEnditting(goal.name)}><EditIcon fontSize="small" style={{ color: '#93876b' }} /></StyledButton> : 
+                    <StyledButton onClick={() => handleEdit(goal._id)}><DoneIcon fontSize="small" style={{ color: '#93876b' }} /></StyledButton>
+                }
+                <StyledButton onClick={() => setOpenModal(true)}><DeleteIcon fontSize="small" style={{ color: '#93876b' }} /></StyledButton>
+            </WrapperGoal>
+            {openModal && <ModalWrapper element={goal} on={openModal} handleRemove={handleRemove} setOpenModal={setOpenModal} />}
+        </>
     )
 }
 

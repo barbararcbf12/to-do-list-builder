@@ -8,6 +8,7 @@ import styled from 'styled-components'
 import DeleteIcon from '@material-ui/icons/Delete'
 import EditIcon from '@material-ui/icons/Edit'
 import DoneIcon from '@material-ui/icons/Done'
+import ModalWrapper from '../Modal'
 
 export const CardGrid = styled.div`
     display: grid;
@@ -78,6 +79,7 @@ function Resolution(props){
     const { refetch, resolution, removeResolution, updateResolution } = props
     const [isEditing, setIsEditing] = useState(true)
     const [editedName, setEditedName] = useState()
+    const [openModal, setOpenModal] = useState(false)
     // Create ref for form input
     const inputRef = useRef(null)
 
@@ -117,31 +119,34 @@ function Resolution(props){
     }
 
     return (
-        <Card key={resolution._id}>
-            <CardTitleWrapper>
-                <Input 
-                    type="text" 
-                    defaultValue={resolution.name} 
-                    disabled={isEditing}
-                    onChange={e => handleOnChange(e)}
-                    isEditing={isEditing}
-                    ref={inputRef}
-                />
-                <CardFunctionsWrapper>
-                    {isEditing ? 
-                        <StyledButton onClick={() => handleStartEnditting(resolution.name)}><EditIcon fontSize="small" /></StyledButton> : 
-                        <StyledButton onClick={() => handleEdit(resolution._id)}><DoneIcon fontSize="small" /></StyledButton>
-                    }
-                    <StyledButton onClick={() => handleRemove(resolution._id)}><DeleteIcon fontSize="small" /></StyledButton>
-                </CardFunctionsWrapper>
-            </CardTitleWrapper>
-            <ul>
-                {resolution.goals.map(goal => <li key={goal._id}><Goal goal={goal} /></li>)}
-                <li>
-                    <GoalForm resolutionId={resolution._id} />
-                </li>
-            </ul>
-        </Card>
+        <>
+            <Card key={resolution._id}>
+                <CardTitleWrapper>
+                    <Input 
+                        type="text" 
+                        defaultValue={resolution.name} 
+                        disabled={isEditing}
+                        onChange={e => handleOnChange(e)}
+                        isEditing={isEditing}
+                        ref={inputRef}
+                    />
+                    <CardFunctionsWrapper>
+                        {isEditing ? 
+                            <StyledButton onClick={() => handleStartEnditting(resolution.name)}><EditIcon fontSize="small" /></StyledButton> : 
+                            <StyledButton onClick={() => handleEdit(resolution._id)}><DoneIcon fontSize="small" /></StyledButton>
+                        }
+                        <StyledButton onClick={() => setOpenModal(true)}><DeleteIcon fontSize="small" /></StyledButton>
+                    </CardFunctionsWrapper>
+                </CardTitleWrapper>
+                <ul>
+                    {resolution.goals.map(goal => <li key={goal._id}><Goal goal={goal} /></li>)}
+                    <li>
+                        <GoalForm resolutionId={resolution._id} />
+                    </li>
+                </ul>
+            </Card>
+            {openModal && <ModalWrapper element={resolution} on={openModal} handleRemove={handleRemove} setOpenModal={setOpenModal} />}
+        </>
     )
 }
 
@@ -164,8 +169,10 @@ const updateResolution = gql `
 
 export default compose(
     graphql(removeResolution, { 
-        name: "removeResolution",}),
+        name: "removeResolution",
+    }),
     graphql(updateResolution, { 
         name: "updateResolution",
     })
 )(Resolution)
+

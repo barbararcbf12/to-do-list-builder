@@ -9,7 +9,6 @@ const Wrapper = styled.div`
     position: relative;
     padding: 0.01em 5px;
     width: 90%;
-    // background: #93876b;
     background: ${props => props.erroMsg !== "" ? "#fff" : "#93876b"};
     border-radius: 3px;
     position: relative;
@@ -29,7 +28,7 @@ const StyledButton = styled.button`
 `
 
 const Input = styled.textarea`
-    font-size: 12px;
+    font-size: 14px;
     color: #fff;
     width: 90%;
     border: none;
