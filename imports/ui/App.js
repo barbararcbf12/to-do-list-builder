@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import gql from 'graphql-tag'
 import { graphql } from 'react-apollo'
 import {flowRight as compose} from 'lodash'
@@ -39,8 +39,8 @@ function App({ loading, resolutions, client, user, refetch }){
             
             { user && user._id && 
                 <>
-                    <ResolutionForm /> 
                     <CardGrid>
+                        <ResolutionForm /> 
                         {resolutions.map(resolution => (
                             <Resolution key={resolution._id} resolution={resolution} refetch={refetch} />
                         ))}

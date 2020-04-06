@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react'
+import React, { useState } from 'react'
 import gql from 'graphql-tag'
 import { graphql } from 'react-apollo'
 import {flowRight as compose} from 'lodash'
@@ -113,7 +113,6 @@ function Goal(props) {
             <WrapperGoal>
                 <input style={{fontSize: "14px"}} type="checkbox" onChange={handleToggleGoal} checked={goal.completed} />
                     <Input 
-                        // id={goal._id}
                         type="text" 
                         rows="2"
                         cols="20"

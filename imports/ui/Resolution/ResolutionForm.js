@@ -4,43 +4,51 @@ import { graphql } from 'react-apollo'
 import styled from 'styled-components'
 import AddIcon from '@material-ui/icons/Queue'
 
-const Wrapper = styled.div`
-    margin: 1.5em;
-    position: relative;
-    padding: 0.73em;
-    width: 50%;
+const Card = styled.div`
+    border: none;
     background: #fff;
+    padding: 5px;
     border-radius: 3px;
-    border: 1px solid #93876b;
+    width: 100%;
     box-shadow: 0 0 5px black;
-    position: relative;
-    border: ${props => props.erroMsg !== "" ? "1px solid red" : null}
 `
 
-const Input = styled.input`
-    font-size: 16px;
+const CardTitleWrapper = styled.div`
+    display: flex;
+    flex-direction: row;
+    margin: 5px;
+`
+
+const Input = styled.textarea`
+    font-size: 20px;
     color: #93876b;
-    width: 90%;
     border: none;
-    outline: none;
+    background: transparent;
+    font-weight: bold;
+    width: 100%;
+    textDecoration: ${props => props.completed ? "line-through" : "none" };
+    border: ${props => !props.isEditing ? "1px solid #93876b" : "1px solid #fff" };
     ::placeholder {
         color: ${props => props.erroMsg !== "" ? "red" : "#93876b"}
     }
 `
 
-const StyledButton = styled.button`
-    padding: 0.65em;
-    font-size: 10px;
-    color: #fff;
-    background: #93876b;
-    border: none;
-    border-radius: 3px;
-    position: absolute;
-    right: 2px;
-    top: 2px;
-    outline: none;
+const CardFunctionsWrapper = styled.div`
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
 `
 
+const StyledButton = styled.button`
+    padding: 0.65em;
+    font-size: 5px;
+    color: #fff;
+    border: none;
+    border-radius: 3px;
+    background-color: #93876b;
+    margin: 2px;
+    outline: none;
+`
 const createResolution = gql `
     mutation createResolution($name: String!) {
         createResolution(name: $name){
@@ -81,21 +89,26 @@ function ResolutionForm(props){
     }
 
     return(
-        <form onSubmit={handleSubmit}>
-            <Wrapper erroMsg={erroMsg}>
-                <Input 
-                    type="text"
-                    ref={inputRef}
-                    placeholder={erroMsg !== "" ? erroMsg : "Add here a new item!"}
-                    value={name}
-                    onChange={handleOnChange}
-                    erroMsg={erroMsg}
-                />
-                <StyledButton>
-                    <AddIcon/>
-                </StyledButton>
-            </Wrapper>
-        </form>
+        <Card>
+            <form onSubmit={handleSubmit}>
+                <CardTitleWrapper>
+                    <Input
+                        autoFocus
+                        type="text"
+                        ref={inputRef}
+                        placeholder={erroMsg !== "" ? erroMsg : "Add here a new item!"}
+                        value={name}
+                        onChange={handleOnChange}
+                        erroMsg={erroMsg}
+                    />
+                    <CardFunctionsWrapper>
+                        <StyledButton>
+                            <AddIcon/>
+                        </StyledButton>
+                    </CardFunctionsWrapper>
+                </CardTitleWrapper>
+            </form>
+        </Card>
     )
 }
 
